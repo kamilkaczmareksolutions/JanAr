@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/janar/*"
+  to = "https://janar.onrender.com/:splat"
+  status = 200
+  force = true
