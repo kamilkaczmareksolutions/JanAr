@@ -11,4 +11,4 @@ if __name__ == "__main__":
     while True:
         commit_and_push()
         print("Commit done. Next commit in 24 hours.")
-        time.sleep(86400)  # Sleep for 24 hours
+        time.sleep(300)  # Sleep for 24 hours (86400)
