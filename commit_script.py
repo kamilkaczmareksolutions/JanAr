@@ -3,7 +3,8 @@ import datetime
 import time
 
 def commit_and_push():
-    repo_dir = 'C:\\Users\\clean\\Dud'
+    # Use the path where the repo is copied in the Docker container
+    repo_dir = '/app'
     subprocess.call(['git', '-C', repo_dir, 'commit', '--allow-empty', '-m', f'Empty commit on {datetime.datetime.now()}'])
     subprocess.call(['git', '-C', repo_dir, 'push'])
 
