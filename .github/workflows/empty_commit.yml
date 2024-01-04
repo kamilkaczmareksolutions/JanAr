@@ -2,8 +2,7 @@ name: Automated Empty Commit
 
 on:
   schedule:
-    # Schedule to run every 5 minutes
-    - cron: '*/5 * * * *'
+    - cron: '*/5 * * * *' # Every 5 minutes for testing
 
 jobs:
   make-empty-commit:
@@ -11,11 +10,16 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3 # Updated to v3
+      with:
+        persist-credentials: false # Prevents automatic persisting of credentials
+
+    - name: Configure Git
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "github-actions@example.com"
 
     - name: Make Empty Commit
       run: |
-        git config user.name "Automated"
-        git config user.email "automated@example.com"
         git commit --allow-empty -m "Automated empty commit"
-        git push
+        git push origin HEAD:master
