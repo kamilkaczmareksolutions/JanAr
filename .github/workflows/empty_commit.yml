@@ -2,7 +2,7 @@ name: Automated Empty Commit
 
 on:
   schedule:
-    - cron: '*/5 * * * *' # Every 5 minutes for testing
+    - cron: '0 0 * * *' # At 00:00 (midnight) UTC every day
 
 permissions:
   contents: write # Grant permission to write to the repository
