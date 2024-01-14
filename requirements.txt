@@ -1,4 +1,4 @@
-openai
+openai==0.28.0
 Pillow
 streamlit
 python-dotenv

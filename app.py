@@ -13,9 +13,8 @@ load_dotenv()
 LOGIN = os.getenv('LOGIN')
 PASSWORD = os.getenv('PASSWORD')
 
-# Initialize OpenAI client
-from openai import OpenAI
-client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+# Load the API key
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 def check_credentials(username, password):
     return username == LOGIN and password == PASSWORD
@@ -30,16 +29,27 @@ def analyze_image(image_base64):
     analysis_prompt = "Jesteś ogromnym entuzjastą dzieł sztuki, jesteś laikiem, natomiast na tyle często chodzisz ze swoimi przyjaciółmi na różnego rodzaju spotkania, na wystawy do muzeów, że doskonale rozumiesz co u ciebie, jak i u innych osób wywołuje emocje. Twoim zadaniem jest zerknąć na zdjęcie przedstawiające dzieło w ramie i opowiedzieć co widzisz w sposób bardzo zwięzły i konkretny, ale taki, który będzie mógł wywołać emocje u osoby, która przeczyta twój opis. Bardzo ważne jest, żebyś nie opisywał niczego co jest poza ramą dzieła, to znaczy zachowuj się tak jakby tło w ogóle nie istniało, dla ciebie istnieje tylko wnętrze dzieła. Pamiętaj, że opis ma być krótki i zwięzły (ilość słów: 100-120), ale ma w taki sposób przemawiać do osoby, która go przeczyta, żeby wywołać emocje."
 
     try:
-        response = client.ChatCompletion.create(
+        response = openai.ChatCompletion.create(
             model="gpt-4-vision-preview",
             messages=[
-                {"role": "user", "content": analysis_prompt},
-                {"role": "user", "content": [{"image": image_base64, "resize": 768}]}
+                {
+                    "role": "user",
+                    "content": analysis_prompt
+                },
+                {
+                    "role": "user",
+                    "content": [  # Content as a list containing a dictionary
+                        {
+                            "image": image_base64,
+                            "resize": 768
+                        }
+                    ]
+                }
             ],
             max_tokens=250
         )
         return response.choices[0].message.content
-    except Exception as e:
+    except openai.error.OpenAIError as e:
         return f"Error: {str(e)}"
 
 # Function to generate a caption
@@ -54,7 +64,7 @@ def generate_caption(image_base64, additional_prompt):
         # Combining system and user prompts
         combined_prompt = system_prompt + user_prompt + additional_prompt
 
-        response = client.ChatCompletion.create(
+        response = openai.ChatCompletion.create(
             model="gpt-4-vision-preview",
             messages=[
                 {
@@ -84,7 +94,7 @@ def combine_outputs(image_analysis, caption_creation):
     combined_prompt = f"{system_prompt}\n\n{user_prompt}"
 
     try:
-        response = client.ChatCompletion.create(
+        response = openai.ChatCompletion.create(
             model="gpt-4-vision-preview",
             messages=[
                 {"role": "system", "content": combined_prompt},
