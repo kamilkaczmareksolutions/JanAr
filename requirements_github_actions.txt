@@ -1,4 +1,4 @@
 openai==3.13.0
 Pillow==12.3.0
-streamlit==1.54.0
+streamlit==1.63.0
 python-dotenv==1.2.3
